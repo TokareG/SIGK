@@ -29,7 +29,7 @@ def main():
     print(input.max())
     print(target.max())
 
-    dir_path = "C:\\Users\\mciek\\Documents\\test"
+    dir_path = "DIRECTORY_PATH"
     test_save = 0
 
     if target.dtype != torch.uint8:

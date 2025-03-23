@@ -121,17 +121,6 @@ def dataset_hole_mask(dataset_directory, output_directory, keep_mask, hole_size,
         output_path = os.path.join(output_directory, file)
         png_hole_mask(input_path, output_path, keep_mask, hole_size, hole_count, border_width)
 
-def SNE(output, target):
-    pass
-
-def PSNR(output, target):
-    pass
-
-def SSIM(output, target):
-    pass
-
-def LPIPS(output, target):
-    pass
 
 
 

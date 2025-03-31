@@ -1,0 +1,211 @@
+import torch
+import torch.nn as nn
+from PIL import Image
+import os
+
+from UNET_impainting.PartialConv2D import PartialConv2d
+
+class UNetPartialConv(nn.Module):
+    def __init__(self, input_channels=3, output_channels=3):
+        super(UNetPartialConv, self).__init__()
+
+        # Encoder
+        self.ReLu = nn.ReLU()
+        self.PConv1 = PartialConv2d(input_channels, 64, 3, stride=2, padding=1)
+        self.PConv2 = PartialConv2d(64, 128, 3, stride=2, padding=1)
+        self.bn2 = nn.BatchNorm2d(128)
+        self.PConv3 = PartialConv2d(128, 256, 3, stride=2, padding=1)
+        self.bn3 = nn.BatchNorm2d(256)
+        self.PConv4 = PartialConv2d(256, 512, 3, stride=2, padding=1)
+        self.bn4 = nn.BatchNorm2d(512)
+        self.PConv5 = PartialConv2d(512, 512, 3, stride=2, padding=1)
+        self.bn5 = nn.BatchNorm2d(512)
+        self.PConv6 = PartialConv2d(512, 512, 3, stride=2, padding=1)
+        self.bn6 = nn.BatchNorm2d(512)
+        self.PConv7 = PartialConv2d(512, 512, 3, stride=2, padding=1)
+        self.bn7 = nn.BatchNorm2d(512)
+        #self.PConv8 = PartialConv2d(512, 512, 3, stride=2, padding=1)
+        #self.bn8 = nn.BatchNorm2d(512)
+
+        # Decoder
+        self.LeakyReLu = nn.LeakyReLU(0.2)
+        self.UPSample = nn.Upsample(scale_factor=2, mode='nearest')
+        #self.PConv9 = PartialConv2d(1024, 512, 3, stride=1, padding=1)
+        #self.bn9 = nn.BatchNorm2d(512)
+        self.PConv10 = PartialConv2d(1024, 512, 3, stride=1, padding=1)
+        self.bn10 = nn.BatchNorm2d(512)
+        self.PConv11 = PartialConv2d(1024, 512, 3, stride=1, padding=1)
+        self.bn11 = nn.BatchNorm2d(512)
+        self.PConv12 = PartialConv2d(1024, 512, 3, stride=1, padding=1)
+        self.bn12 = nn.BatchNorm2d(512)
+        self.PConv13 = PartialConv2d(768, 256, 3, stride=1, padding=1)
+        self.bn13 = nn.BatchNorm2d(256)
+        self.PConv14 = PartialConv2d(384, 128, 3, stride=1, padding=1)
+        self.bn14 = nn.BatchNorm2d(128)
+        self.PConv15 = PartialConv2d(192, 64, 3, stride=1, padding=1)
+        self.bn15 = nn.BatchNorm2d(64)
+        self.PConv16 = PartialConv2d(67, 3, 3, stride=1, padding=1)
+
+    #def save_mask(self, masks, text):
+    #    save_dir = "C:\\Users\\mciek\\Documents\\test_mask"
+    #    masks = masks.float()  # in case it's boolean
+    #    ids = ['layerR', 'layerG', 'layerB', 'layerA']  # your IDs
+#
+    #    for i, mask in enumerate(masks):  # Loop over batch
+    #        for j, layer in enumerate(mask):  # Loop over layers
+    #            layer_img = (layer * 255).byte().cpu().numpy()  # scale to 0-255 and convert to uint8
+    #            img = Image.fromarray(layer_img)
+    #            img.save(os.path.join(save_dir, f'{text}_{i}_layer{j}.png'))
+
+    def save_mask(self, masks, text):
+        pass
+
+    def forward(self, input, input_mask):
+        # Encoder
+        x1, mask1 = self.PConv1(input, input_mask)
+        x1 = self.ReLu(x1)
+        self.save_mask(mask1, "mask1")
+        #print("x1")
+        #print(x1.shape)
+        #print(mask1.shape)
+        x2, mask2 = self.PConv2(x1, mask1)
+        x2 = self.bn2(x2)
+        x2 = self.ReLu(x2)
+        self.save_mask(mask2, "mask2")
+        #print("x2")
+        #print(x2.shape)
+        #print(mask2.shape)
+        x3, mask3 = self.PConv3(x2, mask2)
+        x3 = self.bn3(x3)
+        x3 = self.ReLu(x3)
+        self.save_mask(mask3, "mask3")
+        #print("x3")
+        #print(x3.shape)
+        #print(mask3.shape)
+        x4, mask4 = self.PConv4(x3, mask3)
+        x4 = self.bn4(x4)
+        x4 = self.ReLu(x4)
+        self.save_mask(mask4, "mask4")
+        #print("x4")
+        #print(x4.shape)
+        #print(mask4.shape)
+        x5, mask5 = self.PConv5(x4, mask4)
+        x5 = self.bn5(x5)
+        x5 = self.ReLu(x5)
+        self.save_mask(mask5, "mask5")
+        #print("x5")
+        #print(x5.shape)
+        #print(mask5.shape)
+        x6, mask6 = self.PConv6(x5, mask5)
+        x6 = self.bn6(x6)
+        x6 = self.ReLu(x6)
+        self.save_mask(mask6, "mask6")
+        #print("x6")
+        #print(x6.shape)
+        #print(mask6.shape)
+
+        x, mask = self.PConv7(x6, mask6)
+        x = self.bn7(x)
+        x = self.ReLu(x)
+        self.save_mask(mask, "mask7")
+#
+        #x, mask = self.PConv8(x7, mask7)
+        #x = self.bn8(x)
+        #x = self.ReLu(x)
+
+        #x = self.UPSample(x)
+        #mask = self.UPSample(mask)
+        #concat_skip_x = torch.cat((x, x7), dim=1)
+        #concat_skip_mask = torch.cat((mask, mask7), dim=1)
+        #x, mask = self.PConv9(concat_skip_x, concat_skip_mask)
+        #x = self.bn9(x)
+        #x = self.LeakyReLu(x)
+#
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask8")
+        concat_skip_x = torch.cat((x, x6), dim=1)
+        concat_skip_mask = torch.cat((mask, mask6), dim=1)
+        self.save_mask(mask, "mask_concat_8")
+        x, mask = self.PConv10(concat_skip_x, concat_skip_mask)
+        x = self.bn10(x)
+        x = self.LeakyReLu(x)
+
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask9")
+        #print("up11")
+        #print(x.shape)
+        #print(mask.shape)
+        concat_skip_x = torch.cat((x, x5), dim=1)
+        concat_skip_mask = torch.cat((mask, mask5), dim=1)
+        self.save_mask(mask, "mask_concat_9")
+        x, mask = self.PConv11(concat_skip_x, concat_skip_mask)
+        x = self.bn11(x)
+        x = self.LeakyReLu(x)
+        #print("u11")
+        #print(x.shape)
+        #print(mask.shape)
+
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask10")
+        #print("up12")
+        #print(x.shape)
+        #print(mask.shape)
+        concat_skip_x = torch.cat((x, x4), dim=1)
+        concat_skip_mask = torch.cat((mask, mask4), dim=1)
+        self.save_mask(mask, "mask_concat_10")
+        x, mask = self.PConv12(concat_skip_x, concat_skip_mask)
+        x = self.bn12(x)
+        x = self.LeakyReLu(x)
+
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask11")
+        #print("up13")
+        #print(x.shape)
+        #print(mask.shape)
+        concat_skip_x = torch.cat((x, x3), dim=1)
+        concat_skip_mask = torch.cat((mask, mask3), dim=1)
+        self.save_mask(mask, "mask_concat_11")
+        #print("concat13")
+        #print(concat_skip_x.shape)
+        #print(concat_skip_mask.shape)
+        x, mask = self.PConv13(concat_skip_x, concat_skip_mask)
+        #print("x13")
+        #print(x.shape)
+        #print(mask.shape)
+        x = self.bn13(x)
+        x = self.LeakyReLu(x)
+
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask12")
+        concat_skip_x = torch.cat((x, x2), dim=1)
+        concat_skip_mask = torch.cat((mask, mask2), dim=1)
+        self.save_mask(mask, "mask_concat_12")
+        x, mask = self.PConv14(concat_skip_x, concat_skip_mask)
+        x = self.bn14(x)
+        x = self.LeakyReLu(x)
+
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask13")
+        concat_skip_x = torch.cat((x, x1), dim=1)
+        concat_skip_mask = torch.cat((mask, mask1), dim=1)
+        self.save_mask(mask, "mask_concat_13")
+        x, mask = self.PConv15(concat_skip_x, concat_skip_mask)
+        x = self.bn15(x)
+        x = self.LeakyReLu(x)
+
+        x = self.UPSample(x)
+        mask = self.UPSample(mask)
+        self.save_mask(mask, "mask14")
+        concat_skip_x = torch.cat((x, input), dim=1)
+        concat_skip_mask = torch.cat((mask, input_mask), dim=1)
+        self.save_mask(mask, "mask_concat_14")
+        x, mask = self.PConv16(concat_skip_x, concat_skip_mask)
+
+
+        return x

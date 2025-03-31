@@ -1,10 +1,10 @@
 import torch
 import pytorch_lightning as pl
-from UNET_impainting.Metrics import Metrics
+from UNET_inpainting.Metrics import Metrics
 import torch.nn as nn
 import os
 import torchvision.io as tvio
-from UNET_impainting.InpaintingLoss import InpaintingLoss
+from UNET_inpainting.InpaintingLoss import InpaintingLoss
 
 
 class InpaintingClassifier(pl.LightningModule):

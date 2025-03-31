@@ -3,7 +3,7 @@ import random
 
 import pytorch_lightning as pl
 from torch.utils.data.dataloader import DataLoader
-from UNET_impainting.InpaintingDataset import InpaintingDataset
+from UNET_inpainting.InpaintingDataset import InpaintingDataset
 import torchvision.transforms as transforms
 
 class InpaintingDataModule(pl.LightningDataModule):

@@ -3,7 +3,7 @@ import torch.nn as nn
 from PIL import Image
 import os
 
-from UNET_impainting.PartialConv2D import PartialConv2d
+from UNET_inpainting.PartialConv2D import PartialConv2d
 
 class UNetPartialConv(nn.Module):
     def __init__(self, input_channels=3, output_channels=3):

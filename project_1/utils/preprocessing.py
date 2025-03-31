@@ -64,21 +64,21 @@ def create_folder_structure(parent_dir):
     if os.listdir(parent_dir):
         raise ValueError("Given directory is not empty.")
 
-    os.makedirs(os.path.join(parent_dir, "ori\\train"))
-    os.makedirs(os.path.join(parent_dir, "ori\\valid"))
-    os.makedirs(os.path.join(parent_dir, "ori\\test"))
+    os.makedirs(os.path.join(parent_dir, "ori/train"))
+    os.makedirs(os.path.join(parent_dir, "ori/valid"))
+    os.makedirs(os.path.join(parent_dir, "ori/test"))
 
-    os.makedirs(os.path.join(parent_dir, "rescale_256\\train"))
-    os.makedirs(os.path.join(parent_dir, "rescale_256\\valid"))
-    os.makedirs(os.path.join(parent_dir, "rescale_256\\test"))
+    os.makedirs(os.path.join(parent_dir, "rescale_256/train"))
+    os.makedirs(os.path.join(parent_dir, "rescale_256/valid"))
+    os.makedirs(os.path.join(parent_dir, "rescale_256/test"))
 
-    os.makedirs(os.path.join(parent_dir, "hole_32\\train"))
-    os.makedirs(os.path.join(parent_dir, "hole_32\\valid"))
-    os.makedirs(os.path.join(parent_dir, "hole_32\\test"))
+    os.makedirs(os.path.join(parent_dir, "hole_32/train"))
+    os.makedirs(os.path.join(parent_dir, "hole_32/valid"))
+    os.makedirs(os.path.join(parent_dir, "hole_32/test"))
 
-    os.makedirs(os.path.join(parent_dir, "hole_3\\train"))
-    os.makedirs(os.path.join(parent_dir, "hole_3\\valid"))
-    os.makedirs(os.path.join(parent_dir, "hole_3\\test"))
+    os.makedirs(os.path.join(parent_dir, "hole_3/train"))
+    os.makedirs(os.path.join(parent_dir, "hole_3/valid"))
+    os.makedirs(os.path.join(parent_dir, "hole_3/test"))
 
 
 def create_hole_mask(mask_size, hole_size, hole_count, border_width):

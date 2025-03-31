@@ -4,9 +4,6 @@ import numpy as np
 import random
 import shutil
 
-from IPython.terminal.shortcuts.filters import pass_through
-from debugpy.launcher import output
-
 
 def resize_dataset(dst_size, dataset_directory, output_directory):
     if not (os.path.isdir(dataset_directory) and os.path.isdir(output_directory)):

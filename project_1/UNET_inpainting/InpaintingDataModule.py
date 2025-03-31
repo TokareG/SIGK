@@ -3,7 +3,7 @@ import random
 
 import pytorch_lightning as pl
 from torch.utils.data.dataloader import DataLoader
-from UNET_inpainting.InpaintingDataset import InpaintingDataset
+from UNET_impainting.InpaintingDataset import InpaintingDataset
 import torchvision.transforms as transforms
 
 class InpaintingDataModule(pl.LightningDataModule):
@@ -25,8 +25,8 @@ class InpaintingDataModule(pl.LightningDataModule):
         self.test_list = [f for f in os.listdir(self.target_test_dir) if os.path.isfile(os.path.join(self.target_test_dir, f))]
 
         random.shuffle(self.train_list)
-        random.shuffle(self.val_list)
-        random.shuffle(self.test_list)
+        #random.shuffle(self.val_list)
+        #random.shuffle(self.test_list)
 
         print(f"Train examples:\t{len(self.train_list)}\n"
               f"Valid examples:\t{len(self.val_list)}\n"
@@ -39,10 +39,10 @@ class InpaintingDataModule(pl.LightningDataModule):
         self.test_dataset = InpaintingDataset(self.test_list, self.target_test_dir, self.input_test_dir)
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers = 4)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, persistent_workers=True, num_workers = 4)
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=1)
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, persistent_workers=True, num_workers = 4)
 
     def val_dataloader(self):
         return DataLoader(self.validate_dataset, batch_size=self.batch_size, persistent_workers=True, num_workers=1)

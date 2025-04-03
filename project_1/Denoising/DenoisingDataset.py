@@ -1,11 +1,11 @@
+import copy
 from torchvision.io import read_image
 from torch.utils.data import Dataset
 import os
 
 class DenoisingDataset(Dataset):
-    def __init__(self, img_list, target_dir, input_dir, transform=None, target_transform=None):
+    def __init__(self, img_list, input_dir, transform=None, target_transform=None):
         self.img_list = img_list
-        self.target_dir = target_dir
         self.input_dir = input_dir
         self.transform = transform
         self.target_transform = target_transform
@@ -16,14 +16,11 @@ class DenoisingDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.img_list[idx]
         input_path = os.path.join(self.input_dir, img_path)
-        input_img = read_image(input_path).float() / 255.
-
-        target_img_path = os.path.join(self.target_dir, img_path)
-        target_img = read_image(target_img_path).float() / 255.
+        noised_img = read_image(input_path).float() / 255.
+        real_image = copy.deepcopy(noised_img)
         if self.transform:
-            input_img = self.transform(input_img)
-        if self.target_transform:
-            target_img = self.target_transform(target_img)
-        return input_img, target_img
+            input_img = self.transform(noised_img)
+
+        return noised_img, real_image
 
 

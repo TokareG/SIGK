@@ -30,36 +30,9 @@ class DenoisingClassifier(pl.LightningModule):
         outputs = self.model(x)
         dn = x - outputs
         dn = torch.clamp(dn, 0.0, 1.0)
-        #print(x.shape)
-        #print(outputs.shape)
-        #print(dn.shape)
 
-
-        # to_pil = transforms.ToPILImage()
-        # x_img = to_pil(x[0])
-        # y_img = to_pil(y[0])
-        # outputs_img = to_pil(outputs[0])
-        # dn_img = to_pil(dn[0])
-        # plt.imshow(x_img)
-        # plt.axis("off")  # Ukrywa osie
-        # plt.show()
-        # plt.imshow(y_img)
-        # plt.axis("off")  # Ukrywa osie
-        # plt.show()
-        # plt.imshow(outputs_img)
-        # plt.axis("off")  # Ukrywa osie
-        # plt.show()
-        # plt.imshow(dn_img)
-        # plt.axis("off")  # Ukrywa osie
-        # plt.show()
-
-
-
-        #a x_img.show()
-        #y_img.show()
-        #outputs_img.show()
-        #dn_img.show()
         loss = self.compute_loss(x, outputs, y)
+
         return loss, x, dn, outputs, y
 
     def common_test_valid_step(self, batch, batch_idx):

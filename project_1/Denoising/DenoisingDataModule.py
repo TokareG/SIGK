@@ -3,7 +3,7 @@ import random
 import pytorch_lightning as pl
 from torch.utils.data.dataloader import DataLoader
 from torchvision.transforms import v2
-from DenoisingDataset import DenoisingDataset
+from Denoising.DenoisingDataset import DenoisingDataset
 
 
 class DenoisingDataModule(pl.LightningDataModule):

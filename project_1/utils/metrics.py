@@ -18,4 +18,5 @@ def SSIM(output_img, target_img, max_value=1):
 
 def LPIPS(output_img, target_img):
     assert output_img.shape == target_img.shape, "Images must have same shape"
-    pass
+    lpips = torchmetrics.image.LearnedPerceptualImagePatchSimilarity(net_type="vgg")
+    return lpips(output_img, target_img)

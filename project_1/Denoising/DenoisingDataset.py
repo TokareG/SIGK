@@ -16,11 +16,11 @@ class DenoisingDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.img_list[idx]
         input_path = os.path.join(self.input_dir, img_path)
-        noised_img = read_image(input_path).float() / 255.
-        real_image = copy.deepcopy(noised_img)
+        input_img = read_image(input_path).float() / 255.
+        real_image = copy.deepcopy(input_img)
         if self.transform:
-            input_img = self.transform(noised_img)
+            input_img = self.transform(input_img)
 
-        return noised_img, real_image
+        return input_img, real_image
 
 

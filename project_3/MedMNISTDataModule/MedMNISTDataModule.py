@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 class MedMNISTDataModule(pl.LightningDataModule):
     def __init__(self,
-                 dataset_name: str = 'pathmnist',
+                 dataset_name: str = 'dermamnist',
                  batch_size: int = 64,
                  num_workers: int = 4,
                  download: bool = True):
@@ -15,7 +15,7 @@ class MedMNISTDataModule(pl.LightningDataModule):
         self.dataset_name = dataset_name
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.download = download
+        self.download = True
 
         # Load dataset info
         self.info = INFO[self.dataset_name]

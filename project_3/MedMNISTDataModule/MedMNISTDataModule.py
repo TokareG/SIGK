@@ -30,9 +30,9 @@ class MedMNISTDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         # Assign train/val/test datasets for use in dataloaders
-        self.train_dataset = self.DataClass(split='train', transform=self.transform, download=self.download)
-        self.val_dataset = self.DataClass(split='val', transform=self.transform, download=self.download)
-        self.test_dataset = self.DataClass(split='test', transform=self.transform, download=self.download)
+        self.train_dataset = self.DataClass(split='train', transform=self.transform, download=self.download, size=64, mmap_mode='r')
+        self.val_dataset = self.DataClass(split='val', transform=self.transform, download=self.download, size=64, mmap_mode='r')
+        self.test_dataset = self.DataClass(split='test', transform=self.transform, download=self.download, size=64, mmap_mode='r')
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, persistent_workers=True)

@@ -30,6 +30,10 @@ class MedMNISTDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         # Assign train/val/test datasets for use in dataloaders
+        print(f"Dataset: \n\t{self.dataset_name}\n"
+              f"Number of classes:\n\t{self.n_classes}\n"
+              f"Classes:\n" + '\n'.join(f"\t- {key}: {label}" for key, label in self.info['label'].items()))
+
         self.train_dataset = self.DataClass(split='train', transform=self.transform, download=self.download, size=64, mmap_mode='r')
         self.val_dataset = self.DataClass(split='val', transform=self.transform, download=self.download, size=64, mmap_mode='r')
         self.test_dataset = self.DataClass(split='test', transform=self.transform, download=self.download, size=64, mmap_mode='r')

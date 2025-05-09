@@ -26,7 +26,7 @@ class DCGAN(pl.LightningModule):
         return self.generator(z)
 
     def training_step(self, batch, batch_idx):
-        imgs, _ = batch
+        imgs, labels = batch
         batch_size = imgs.size(0)
 
         opt_g, opt_d = self.optimizers()

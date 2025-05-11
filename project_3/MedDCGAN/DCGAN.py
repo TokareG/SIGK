@@ -2,18 +2,22 @@ import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 import torchvision
+from torchvision.utils import save_image
 from MedDCGAN.Generator import Generator
 from MedDCGAN.Discriminator import Discriminator
+import os
 
 class DCGAN(pl.LightningModule):
     def __init__(self,
-                 latent_dim = 100,
+                 latent_dim = 1000,
                  img_shape = (3,64,64),
                  lr = 2e-4,
                  b1 = 0.5,
                  b2 = 0.95):
         super().__init__()
         self.save_hyperparameters()
+        print(f"Latend_dim: {self.hparams.latent_dim}")
+        print(f"Latend_dimv2: {latent_dim}")
         self.automatic_optimization = False
         self.generator = Generator( latent_dim = self.hparams.latent_dim,
                                     img_shape = self.hparams.img_shape,)
@@ -80,6 +84,7 @@ class DCGAN(pl.LightningModule):
         # Logowanie strat
         self.log("val/g_loss", g_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val/d_loss", d_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('val_loss', g_loss, on_step=False, on_epoch=True, prog_bar=True)
 
         # Obrazki prawdziwe i wygenerowane
         if batch_idx == 0:
@@ -95,6 +100,14 @@ class DCGAN(pl.LightningModule):
         sample_imgs = self(z)
         grid_gen = torchvision.utils.make_grid(sample_imgs)
         self.logger.experiment.add_image("validation/generated_images", grid_gen, self.current_epoch)
+
+    def generate(self, output_path, n_examples):
+        os.makedirs(output_path, exist_ok=True)
+        for i in range(n_examples):
+            output_name = os.path.join(output_path, f"{i}.png")
+            z = torch.randn(1, self.hparams.latent_dim, 1, 1, device="cuda", dtype=torch.float32)
+            generated_img = self(z)
+            save_image(generated_img, output_name)
 
 
     def configure_optimizers(self):

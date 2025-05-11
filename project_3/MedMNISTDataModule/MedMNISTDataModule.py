@@ -3,19 +3,22 @@ import medmnist
 from medmnist import INFO
 from torchvision import transforms
 from torch.utils.data import DataLoader
+from torch.utils.data import Subset
 
 class MedMNISTDataModule(pl.LightningDataModule):
     def __init__(self,
+                 single_class = None,
                  dataset_name: str = 'dermamnist',
                  batch_size: int = 64,
                  num_workers: int = 4,
                  download: bool = True):
         super().__init__()
 
+        self.single_class = single_class
         self.dataset_name = dataset_name
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.download = True
+        self.download = download
 
         # Load dataset info
         self.info = INFO[self.dataset_name]
@@ -37,6 +40,15 @@ class MedMNISTDataModule(pl.LightningDataModule):
         self.train_dataset = self.DataClass(split='train', transform=self.transform, download=self.download, size=64, mmap_mode='r')
         self.val_dataset = self.DataClass(split='val', transform=self.transform, download=self.download, size=64, mmap_mode='r')
         self.test_dataset = self.DataClass(split='test', transform=self.transform, download=self.download, size=64, mmap_mode='r')
+
+        if self.single_class is not None:
+            indices = [i for i, (_, label) in enumerate(self.train_dataset) if label.item() == self.single_class]
+            self.train_dataset = Subset(self.train_dataset, indices)
+            indices = [i for i, (_, label) in enumerate(self.val_dataset) if label.item() == self.single_class]
+            self.val_dataset = Subset(self.val_dataset, indices)
+            indices = [i for i, (_, label) in enumerate(self.test_dataset) if label.item() == self.single_class]
+            self.test_dataset = Subset(self.test_dataset, indices)
+
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, persistent_workers=True)

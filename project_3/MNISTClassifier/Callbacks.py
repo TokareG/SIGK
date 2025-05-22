@@ -10,8 +10,8 @@ def get_early_stopping():
     )
     return early_stop_callback
 
-def get_checkpoint_callback():
-    MODEL_CKPT_PATH = 'model/'
+def get_checkpoint_callback(subfolder):
+    MODEL_CKPT_PATH = f'Classifier_model/{subfolder}'
     MODEL_CKPT = 'model-{epoch:02d}-{val_loss:.2f}'
 
     checkpoint_callback = ModelCheckpoint(

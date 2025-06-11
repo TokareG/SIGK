@@ -73,7 +73,7 @@ class MyInterpolationModel(pl.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.lr)
+        return torch.optim.Adam(self.parameters(), lr=self.lr, betas=(0.9, 0.999))
 
     def _log_images(self, frame0, frame1, output, target, stage='val'):
         # Take up to 5 samples from the batch

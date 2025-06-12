@@ -19,9 +19,13 @@ class BaseWindow(WindowConfig):
         super(BaseWindow, self).__init__(**kwargs)
         self.output_path = self.argv.output_path
         self.max_frames = self.argv.max_frames
+        self.dataset = self.argv.dataset
         if self.argv.output_path:
             os.makedirs(name=self.output_path, exist_ok=True)
-            os.makedirs(name=os.path.join(self.output_path, "img"), exist_ok=True)
+            if self.dataset:
+                os.makedirs(name=os.path.join(self.output_path, "img"), exist_ok=True)
+            else:
+                os.makedirs(name=os.path.join(self.output_path, "renderer"), exist_ok=True)
 
         shaders = get_shaders(self.argv.shaders_dir_path)
         self.program = self.ctx.program(vertex_shader=shaders[self.argv.shader_name].vertex_shader,
@@ -51,6 +55,9 @@ class BaseWindow(WindowConfig):
         parser.add_argument('--model_name', type=str, required=False, help='Name of the model to load')
         parser.add_argument('--output_path', type=str, required=False, help='Where to save an image')
         parser.add_argument('--max_frames', type=int, required=False, help='How many frames')
+        parser.add_argument('--dataset', action='store_true', help='Generate dataset with relative positions')
+        parser.add_argument('--scene_data_path', type=str, required=False, help='CSV with scene data to render')
+
 
     def on_render(self, time: float, frame_time: float):
         self.ctx.clear(0.1, 0.2, 0.3, 0.0)
